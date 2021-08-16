@@ -1,5 +1,6 @@
 package com.mobarok.rxjavaandmvvm.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,7 +11,7 @@ import com.mobarok.rxjavaandmvvm.databinding.ActivityMainBinding
 import com.mobarok.rxjavaandmvvm.viewmodel.ListViewModel
 
 class MainActivity : AppCompatActivity() {
-    lateinit var viewModel : ListViewModel;
+    private lateinit var viewModel : ListViewModel;
     private val countryAdapter = CountryListAdapter(arrayListOf())
     private lateinit var binding:ActivityMainBinding
 
@@ -28,11 +29,17 @@ class MainActivity : AppCompatActivity() {
 
         observerViewModel()
 
+        binding.refreshButton.setOnClickListener{
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
-    fun observerViewModel(){
+    private fun observerViewModel(){
         viewModel.countries.observe(this, Observer {
             countries-> countries?.let{
+                binding.recyclerView.visibility = View.VISIBLE
                 countryAdapter.updateCountries(it)
             }
         })
